@@ -1,0 +1,6 @@
+# environment files
+.env
+
+# volume files
+etc-dnsmasq.d
+etc-pihole
