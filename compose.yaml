@@ -16,6 +16,7 @@ services:
     networks:
       - default
       - proxy-network
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.rule=Host(`${PIHOLE_URL}`)"
@@ -24,5 +25,9 @@ services:
 
 networks:
   default:
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: fd00:fa17:d3ad:c0d3::/64
   proxy-network:
     external: true
