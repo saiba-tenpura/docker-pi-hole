@@ -5,7 +5,7 @@ services:
     environment:
       TZ: ${PIHOLE_TZ}
       WEBPASSWORD: ${PIHOLE_PASSWORD}
-      PIHOLE_DNS_: unbound#5335
+      PIHOLE_DNS_: unbound#5335;fd00:fa17:d3ad:c0d3::5335#5335
     volumes:
       - ./etc-pihole:/etc/pihole
       - ./etc-dnsmasq.d:/etc/dnsmasq.d
@@ -32,7 +32,8 @@ services:
       - "5335/tcp"
       - "5335/udp"
     networks:
-      - default
+      default:
+        ipv6_address: fd00:fa17:d3ad:c0d3::5335
 
 networks:
   default:
