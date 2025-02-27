@@ -4,8 +4,9 @@ services:
     restart: unless-stopped
     environment:
       TZ: ${PIHOLE_TZ}
-      WEBPASSWORD: ${PIHOLE_PASSWORD}
-      PIHOLE_DNS_: unbound#5335;fd00:fa17:d3ad:c0d3::5335#5335
+      FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
+      FTLCONF_dns_upstreams: unbound#5335;fd00:fa17:d3ad:c0d3::5335#5335
+      FTLCONF_misc_etc_dnsmasq_d: 'true'
     volumes:
       - ./etc-pihole:/etc/pihole
       - ./etc-dnsmasq.d:/etc/dnsmasq.d
