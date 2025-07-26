@@ -1,6 +1,6 @@
 services:
   pihole:
-    image: pihole/pihole:2025.05.1
+    image: pihole/pihole:2025.07.1
     restart: unless-stopped
     environment:
       TZ: ${PIHOLE_TZ}
@@ -27,7 +27,7 @@ services:
       - 127.0.0.1
 
   unbound:
-    image: klutchell/unbound:1.23.0
+    image: klutchell/unbound:1.23.1
     restart: unless-stopped
     volumes:
       - ./unbound:/etc/unbound/custom.conf.d
