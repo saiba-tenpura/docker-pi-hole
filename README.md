@@ -1,4 +1,4 @@
-# Docker Pi-hole
+# Pi-hole Compose
 This repository contains my Docker Compose configuration for setting up a Pi-hole instance with Unbound as its underlying recursive DNS resolver and an external Traefik instance for serving the web interface.
 
 ## Features
@@ -13,8 +13,24 @@ First clone the repository, then copy and adjust the enviroment configuration fi
 cp .env.example .env
 ```
 
-After that setup the external Traefik instance and network a short guide can be found [here](https://github.com/saiba-tenpura/traefik-proxy).
+## Environment Variables
+The `.env` file allows you to configure the basic attributes of the Pi-hole service.
 
+| Variable          | Default               | Value              | Description                                           |
+| ----------------- | --------------------- | ------------------ | ----------------------------------------------------- |
+| `PIHOLE_DOMAIN`   | `pi-hole.example.com` | `<DOMAIN>`         | Domain under which the Pi-hole instance is reachable. |
+| `PIHOLE_PASSWORD` | unset                 | `<Admin password>` | Admin password for logging into the web interface.    |
+| `PIHOLE_TZ`       | `America/Chicago`     | `<Timezone>`       | Timezone used for performing log rotations.           |
+
+
+After that setup the external Traefik instance and network a short guide can be found [here](https://github.com/saiba-tenpura/traefik-compose).
+
+Once launched, your instance can serve as a DNS server. Initially, however, you may experience slower performance due to the time it takes for it to propagate downwards from the root DNS servers and build up its cache.
+```
+docker compose up -d
+```
+
+## IPv6 Support for Docker < v27
 In order to support IPv6 via Docker you have to adjust your configuration accordingly.
 ```
 # /etc/docker/daemon.json
@@ -25,19 +41,21 @@ In order to support IPv6 via Docker you have to adjust your configuration accord
 }
 ```
 
-Once launched, your instance can serve as a DNS server. Initially, however, you may experience slower performance due to the time it takes for it to propagate downwards from the root DNS servers and build up its cache.
-```
-docker compose up -d
-```
+## Port 53 already in use
 
-## Environment Variables
-The `.env` file allows you to configure the basic attributes of the Pi-hole service.
+### Systemd-resolved's DNSStubListener
+On some systems the port might already be in use by systemd-resolved's DNSStubListener.
 
-| Variable          | Default               | Value              | Description                                        |
-| ----------------- | --------------------- | ------------------ | -------------------------------------------------- |
-| `PIHOLE_URL`      | `pi-hole.example.com` | `<URL>`            | URL under which the Pi-hole instance is reachable. |
-| `PIHOLE_PASSWORD` | unset                 | `<Admin password>` | Admin password for logging into the web interface. |
-| `PIHOLE_TZ`       | `America/Chicago`     | `<Timezone>`       | Timezone used for performing log rotations.        |
+Disable & reload systemd-resolved:
+```bash
+mkdir -p /etc/systemd/resolved.conf.d
+cat > /etc/systemd/resolved.conf.d/90-pi-hole-disable-stub-listener.conf << EOF
+[Resolve]
+DNSStubListener=no
+EOF
+
+systemctl reload-or-restart systemd-resolved
+```
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the [MIT](./LICENSE) license.
