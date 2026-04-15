@@ -6,10 +6,9 @@ services:
       TZ: ${PIHOLE_TZ}
       FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
       FTLCONF_dns_upstreams: unbound#5335;fd00:fa17:d3ad:c0d3::5335#5335
-      FTLCONF_misc_etc_dnsmasq_d: 'true'
+      FTLCONF_dns_listeningMode: ALL
     volumes:
       - ./etc-pihole:/etc/pihole
-      - ./etc-dnsmasq.d:/etc/dnsmasq.d
     ports:
       - "53:53/tcp"
       - "53:53/udp"
