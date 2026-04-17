@@ -1,6 +1,6 @@
 services:
   pihole:
-    image: pihole/pihole:2025.11.1
+    image: pihole/pihole:2026.04.0
     restart: unless-stopped
     environment:
       TZ: ${PIHOLE_TZ}
