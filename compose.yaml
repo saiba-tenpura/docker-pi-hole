@@ -5,10 +5,12 @@ services:
     environment:
       TZ: ${PIHOLE_TZ}
       FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
-      FTLCONF_dns_upstreams: unbound#5335;fd00:fa17:d3ad:c0d3::5335#5335
+      FTLCONF_dns_upstreams: unbound#5335
       FTLCONF_dns_listeningMode: ALL
     volumes:
       - ./etc-pihole:/etc/pihole
+    cap_add:
+      - SYS_NICE
     ports:
       - "53:53/tcp"
       - "53:53/udp"
@@ -33,14 +35,10 @@ services:
       - "5335/tcp"
       - "5335/udp"
     networks:
-      default:
-        ipv6_address: fd00:fa17:d3ad:c0d3::5335
+      - default
 
 networks:
   default:
     enable_ipv6: true
-    ipam:
-      config:
-        - subnet: fd00:fa17:d3ad:c0d3::/64
   proxy-network:
     external: true
